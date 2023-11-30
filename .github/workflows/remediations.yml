@@ -1,0 +1,22 @@
+name: PR Requirements Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled, unlabeled]
+  issue_comment:
+    types: [edited]
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remediations Check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const script = require('.github/workflows/remediations.js')
+            await script({github, context, core})
